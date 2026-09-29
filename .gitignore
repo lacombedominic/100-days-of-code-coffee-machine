@@ -1,0 +1,18 @@
+# Virtual environments
+venv/
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment variables
+.env
+
+# PyCharm
+.idea/
+
+# Build files
+build/
+dist/
+*.egg-info/
