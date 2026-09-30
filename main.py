@@ -54,22 +54,22 @@ def process_coins():
     nickels = float(input("How many nickels?: ")) * .05
     pennies = float(input("How many pennies?: ")) * .01
 
-    total_amount = quarters + dimes + nickels + pennies
+    total_amount = float(quarters + dimes + nickels + pennies)
     return total_amount
 
-def check_payment(user_paid, order):
+def check_payment(user_paid, order, current_resources):
     """This checks to see if the user has enough money based on the input from the 'process_coins()' function. If it doesn't it will
     return False. If it does, it will return True."""
     if user_paid < MENU[order]["cost"]:
         print("Sorry, that's not enough. Money refunded.")
         return False
     elif user_paid == MENU[order]["cost"]:
-        resources["money"] += user_paid
-        # Function to give drink goes here.
+        current_resources["money"] += user_paid
     elif user_paid > MENU[order]["cost"]:
+        current_resources["money"] += user_paid
         user_change = round(user_paid - MENU[order]["cost"], 2)
+        current_resources["money"] -= user_change
         print(f"Here is your change: ${user_change}")
-        # Function to give drink goes here.
     return True
 
 def check_resources(current_resources, order):
@@ -84,7 +84,13 @@ def check_resources(current_resources, order):
     return True
 
 def make_coffee(current_resources, order):
-    '''This will deduct the amount of resources that the coffee needs then give the drink.'''
+    """This will deduct the amount of resources that the coffee needs then give the drink."""
+    order = MENU[order]["ingredients"]
+    for ingredient, amount_needed in order.items():
+        if ingredient in current_resources:
+            current_resources[ingredient] -= amount_needed
+
+    print(f"Here is your coffee: ☕")
 
 
 
@@ -102,4 +108,5 @@ while machine_running:
     else:
         check_resources(resources, user_choice)
         total_money = process_coins()
-        check_payment(total_money, user_choice)
+        check_payment(total_money, user_choice, resources)
+        make_coffee(resources, user_choice)
