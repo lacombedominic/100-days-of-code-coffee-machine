@@ -93,8 +93,6 @@ def make_coffee(current_resources, order):
     print(f"Here is your coffee: ☕")
 
 
-
-
 ####################################### Starts here #####################################
 machine_running = True
 while machine_running:
@@ -102,11 +100,17 @@ while machine_running:
 
     if user_choice == "off":
         machine_running = False
-        exit()
     elif user_choice == "report":
         show_resources(resources)
+    elif user_choice in MENU:
+        if check_resources(resources, user_choice) == True:
+            total_money = process_coins()
+            enough_money = check_payment(total_money, user_choice, resources)
+            if enough_money == True:
+                make_coffee(resources, user_choice)
+            else:
+                continue
+        else:
+            continue
     else:
-        check_resources(resources, user_choice)
-        total_money = process_coins()
-        check_payment(total_money, user_choice, resources)
-        make_coffee(resources, user_choice)
+        print("That is an invalid option. Please try again.")
