@@ -66,9 +66,8 @@ def check_payment(user_paid, order, current_resources):
     elif user_paid == MENU[order]["cost"]:
         current_resources["money"] += user_paid
     elif user_paid > MENU[order]["cost"]:
-        current_resources["money"] += user_paid
+        current_resources["money"] += MENU[order]["cost"]
         user_change = round(user_paid - MENU[order]["cost"], 2)
-        current_resources["money"] -= user_change
         print(f"Here is your change: ${user_change}")
     return True
 
@@ -103,10 +102,10 @@ while machine_running:
     elif user_choice == "report":
         show_resources(resources)
     elif user_choice in MENU:
-        if check_resources(resources, user_choice) == True:
+        if check_resources(resources, user_choice):
             total_money = process_coins()
             enough_money = check_payment(total_money, user_choice, resources)
-            if enough_money == True:
+            if enough_money:
                 make_coffee(resources, user_choice)
             else:
                 continue
